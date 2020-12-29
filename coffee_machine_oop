@@ -1,0 +1,125 @@
+class CoffeeMaker:
+    """A coffee machine project that makes 3 flavours of coffee (espresso/latte.cappuccino"""
+
+    resources_water = 400
+    resources_milk = 540
+    resources_coffee = 120
+    resources_cups = 9
+    resources_money = 550
+
+    def __init__(self, **kwargs): # using kwargs to accept keyword arguments. 
+        for ingredients, quantity in kwargs.items():
+            setattr(self, ingredients, quantity) # Extracting the kwargs value and setting the attributes. 
+    
+
+    @classmethod
+    def display(cls):
+        print()
+        return f"""The coffee machine has:
+{cls.resources_water} of water
+{cls.resources_milk} of milk
+{cls.resources_coffee} of coffee beans
+{cls.resources_cups} of disposable cups
+${cls.resources_money} of money
+        """
+
+
+    @classmethod
+    def make_coffee(cls, flavour):
+        coffee = eval(flavour)
+        if cls.resources_water >= coffee.water:
+            print("I have enough resources, making you a coffee!")
+            cls.resources_water -= coffee.water
+            cls.resources_milk -= coffee.milk
+            cls.resources_coffee -= coffee.coffee
+            cls.resources_cups -= 1
+            cls.resources_money += coffee.cost
+        else:
+            print("Sorry, not enough water!")
+    
+
+    @classmethod
+    def fill_coffee(cls):
+        try:
+            fill_water = int(input("Write how many ml of water do you want to add:\n"))
+            fill_milk = int(input("Write how many ml of milk do you want to add:\n"))
+            fill_coffee = int(input("Write how many grams of coffee beans do you want to add:\n"))
+            fill_cups = int(input("Write how many disposable cups of coffee do you want to add:\n"))
+
+            cls.resources_water += fill_water
+            cls.resources_milk += fill_milk
+            cls.resources_coffee += fill_coffee
+            cls.resources_cups += fill_cups
+
+        except ValueError as err:
+            print("Got a runtime error", err)
+    
+    
+    @classmethod
+    def take_money(cls):
+        return f"I give you ${cls.resources_money}"
+
+
+
+    @classmethod
+    def making_coffee(cls):
+        exit = False
+        # back = False
+
+        while not exit:
+            print("Write action (buy, fill, take, remaining, exit):")
+            user_input = input().lower()
+            # print(user_input)
+            if user_input == "remaining":
+                print(CoffeeMaker.display())
+            
+            elif user_input == "buy":
+                back = False
+                while not back:
+                    print()
+                    user_choice = input("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:\n")
+                    
+                    if user_choice == "back":
+                        print()
+                        back = True
+                    
+                    elif user_choice == "1":
+                        flavour = "espresso"
+                        CoffeeMaker.make_coffee(flavour)
+                        # print()
+                        back = True
+                        print()
+                    
+                    elif user_choice == "2":
+                        flavour = "latte"
+                        CoffeeMaker.make_coffee(flavour)
+                        back = True
+                        print()
+                    
+                    elif user_choice == "3":
+                        flavour = "cappuccino"
+                        CoffeeMaker.make_coffee(flavour)
+                        back = True
+                        print()
+
+            elif user_input == "fill":
+                print()
+                CoffeeMaker.fill_coffee()
+                print()
+            
+            elif user_input == "take":
+                print()
+                print(CoffeeMaker.take_money())
+                cls.resources_money -= cls.resources_money
+                print()
+
+            elif user_input == "exit":
+                exit = True
+
+
+espresso = CoffeeMaker(water=250, milk=0, coffee=16, cost=4) 
+# setting milk to 0 enables the use of a single method for all flavours of  coffee.
+latte = CoffeeMaker(water=350, milk=75, coffee=20, cost=7)
+cappuccino = CoffeeMaker(water=200, milk=100, coffee=12, cost=6)
+
+CoffeeMaker.making_coffee()
